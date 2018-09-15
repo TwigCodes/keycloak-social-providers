@@ -14,25 +14,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <keycloak.version>4.4.0.Final</keycloak.version>
     <junit.version>4.12</junit.version>
-    <docker-maven.version>0.26.0</docker-maven.version>
+    <docker-maven.version>1.4.4</docker-maven.version>
   </properties>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>${docker-maven.version}</version>
-        <configuration>
-          <images>
-              <!-- A single's image configuration -->
-              <image>
-                <name>twigcodes/keycloak</name>
-              </image>
-          </images>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
   <modules>
 		<module>wechat</module>
 		<module>jdsmart</module>
