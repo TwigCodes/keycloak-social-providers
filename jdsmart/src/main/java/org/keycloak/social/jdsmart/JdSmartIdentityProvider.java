@@ -46,14 +46,14 @@ public class JdSmartIdentityProvider
     implements SocialIdentityProvider<OAuth2IdentityProviderConfig> {
   private static final String DEFAULT_TIME_STAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
   private static final String DEFAULT_TIME_ZONE = "Asia/Shanghai";
-  private static final String PLATFORM = "ios";
-  private static final String ANDROID_PACKAGE_NAME = "com.sc.smarthome";
-  private static final String ANDROID_SHA1_SIGNATURE = "C7DAB911032E9E6CD2FBAB01F324A9B37D452F8B";
-  private static final String IOS_BUNDLE_ID = "com.sc.smart";
+  private static final String PLATFORM_IOS = "ios";
   private static final String OAUTH2_PARAMETER_IDENTITY = "identity";
   private static final String OAUTH2_PARAMETER_PLATFORM = "plat";
   private static final String OAUTH2_PARAMETER_TIMESTAMP = "timestamp";
-  private static final String DEVICE_PLATFORM = "ios";
+  private static final String OAUTH2_PARAMETER_IOSBUNDLEID = "iOSBundleId";
+  private static final String OAUTH2_PARAMETER_ANDROIDSHA1 = "AndroidSha1";
+  private static final String OAUTH2_PARAMETER_ANDROIDPACKAGE = "AndroidPackage";
+  private static final String OAUTH2_PARAMETER_SIGNATURE = "signature";
 
   public static final String BASE_AUTH_URL = "https://smartopen.jd.com/oauth/authorize";
   public static final String TOKEN_URL = "https://smartopen.jd.com/oauth/token";
@@ -79,9 +79,9 @@ public class JdSmartIdentityProvider
   protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
     String uid = getJsonProperty(profile, "uid");
     BrokeredIdentityContext user = new BrokeredIdentityContext(uid);
-
     user.setUsername(getJsonProperty(profile, uid));
     user.setBrokerUserId(getJsonProperty(profile, uid));
+    user.setModelUsername(getJsonProperty(profile, uid));
     user.setName(getJsonProperty(profile, "user_nick"));
     user.setIdpConfig(getConfig());
     user.setIdp(this);
@@ -110,17 +110,29 @@ public class JdSmartIdentityProvider
     final UriBuilder uriBuilder = UriBuilder.fromUri(BASE_AUTH_URL);
     logger.info("----------jdsmart");
     String clientId = getConfig().getClientId();
+    String platform = getConfig().getConfig().get(OAUTH2_PARAMETER_PLATFORM);
     String formatDateTime = getFormattedDate();
     String identity;
+    String signature;
     try {
-      identity = buildAppSignature(IOS_BUNDLE_ID, clientId, formatDateTime);
+      if (platform.equals(PLATFORM_IOS)) {
+        String iOSBundleId = getConfig().getConfig().get(OAUTH2_PARAMETER_IOSBUNDLEID);
+        identity = buildAppSignature(iOSBundleId, clientId, formatDateTime);
+      } else {
+        String androidSha1 = getConfig().getConfig().get(OAUTH2_PARAMETER_ANDROIDSHA1);
+        String androidPackage = getConfig().getConfig().get(OAUTH2_PARAMETER_ANDROIDPACKAGE);
+        signature = buildAppSignature(androidSha1, clientId, formatDateTime);
+        uriBuilder.queryParam(OAUTH2_PARAMETER_SIGNATURE, signature);
+        identity = buildAppSignature(androidPackage, clientId, formatDateTime);
+      }
+
       uriBuilder
-        .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
+        .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, OAUTH2_PARAMETER_CODE)
         .queryParam(OAUTH2_PARAMETER_CLIENT_ID, clientId)
         .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri())
         .queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
         .queryParam(OAUTH2_PARAMETER_IDENTITY, identity)
-        .queryParam(OAUTH2_PARAMETER_PLATFORM, DEVICE_PLATFORM)
+        .queryParam(OAUTH2_PARAMETER_PLATFORM, platform)
         .queryParam(OAUTH2_PARAMETER_TIMESTAMP, formatDateTime);
         String loginHint = request.getAuthenticationSession().getClientNote(OIDCLoginProtocol.LOGIN_HINT_PARAM);
       if (getConfig().isLoginHint() && loginHint != null) {
@@ -164,7 +176,7 @@ public class JdSmartIdentityProvider
 		} catch (IOException e) {
 			logger.error(e);
     }
-    String accessToken = extractTokenFromResponse(response, "access_token");
+    String accessToken = extractTokenFromResponse(response, OAUTH2_PARAMETER_ACCESS_TOKEN);
 		context.getContextData().put(FEDERATED_ACCESS_TOKEN, accessToken);
 		return context;
 	}
@@ -186,7 +198,7 @@ public class JdSmartIdentityProvider
   public static String toHex(byte[] bytes) {
     BigInteger bi = new BigInteger(1, bytes);
     return String.format("%0" + (bytes.length << 1) + "X", bi);
-}
+  }
 
   private static String getFormattedDate() {
     DateTimeFormatter formatter = DateTimeFormatter

@@ -98,11 +98,11 @@ public class WeChatIdentityProvider
 	protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
 		String uuionid = getJsonProperty(profile, "unionid");
 		BrokeredIdentityContext user = new BrokeredIdentityContext(
-				(uuionid != null && uuionid.length() > 0 ? uuionid : getJsonProperty(profile, "openid")));
+				(uuionid != null && uuionid.length() > 0 ? uuionid : getJsonProperty(profile, OPENID)));
 
-		user.setUsername(getJsonProperty(profile, "openid"));
-		user.setBrokerUserId(getJsonProperty(profile, "openid"));
-		user.setModelUsername(getJsonProperty(profile, "openid"));
+		user.setUsername(getJsonProperty(profile, OPENID));
+		user.setBrokerUserId(getJsonProperty(profile, OPENID));
+		user.setModelUsername(getJsonProperty(profile, OPENID));
 		user.setName(getJsonProperty(profile, "nickname"));
 		user.setIdpConfig(getConfig());
 		user.setIdp(this);
@@ -119,7 +119,7 @@ public class WeChatIdentityProvider
 		try {
 			JsonNode profile = null;
 			if (wechat) {
-				String openid = extractTokenFromResponse(response, "openid");
+				String openid = extractTokenFromResponse(response, OPENID);
 				String url = PROFILE_URL.replace("ACCESS_TOKEN", accessToken).replace("OPENID", openid);
 				profile = SimpleHttp.doGet(url, session).asJson();
 			} else {
@@ -179,7 +179,7 @@ public class WeChatIdentityProvider
 			uriBuilder = UriBuilder.fromUri(WECHAT_AUTH_URL);
 			uriBuilder.queryParam(OAUTH2_PARAMETER_SCOPE, WECHAT_DEFAULT_SCOPE)
 					.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
-					.queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
+					.queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, OAUTH2_PARAMETER_CODE)
 					.queryParam(OAUTH2_PARAMETER_CLIENT_ID, getConfig().getConfig().get(WECHAT_APPID_KEY))
 					.queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
 		} else {

@@ -1,0 +1,31 @@
+<div class="form-group clearfix">
+	<label class="col-md-2 control-label" for="device-platform">{{:: 'jdsmart-device-platform' | translate}}</label>
+	<div class="col-md-6">
+    <span id="device-platform" class="form-control" >
+      <input type="radio" ng-model="identityProvider.config.plat" value="ios" checked> iOS
+      <input type="radio" ng-model="identityProvider.config.plat" value="Android"> Android
+    </span>
+	</div>
+	<kc-tooltip>{{:: 'jdsmart-device-platform.tooltip' | translate}}</kc-tooltip>
+</div>
+<div class="form-group clearfix" ng-if="identityProvider.config.plat==='ios'">
+  <label class="col-md-2 control-label" for="ios-bundle-id">{{:: 'jdsmart-ios-bundle-id' | translate}}</label>
+  <div class="col-md-6">
+    <input class="form-control" id="ios-bundle-id" ng-model="identityProvider.config.iOSBundleId" required>
+  </div>
+  <kc-tooltip>{{:: 'jdsmart-ios-bundle-id.tooltip' | translate}}</kc-tooltip>
+</div>
+<div class="form-group clearfix" ng-if="identityProvider.config.plat==='Android'">
+  <label class="col-md-2 control-label" for="android-package">{{:: 'jdsmart-android-package' | translate}}</label>
+  <div class="col-md-6">
+    <input class="form-control" id="android-package" ng-model="identityProvider.config.AndroidPackage" required>
+  </div>
+  <kc-tooltip>{{:: 'jdsmart-android-package.tooltip' | translate}}</kc-tooltip>
+</div>
+<div class="form-group clearfix" ng-if="identityProvider.config.plat==='Android'">
+  <label class="col-md-2 control-label" for="android-sha1">{{:: 'jdsmart-android-sha1' | translate}}</label>
+  <div class="col-md-6">
+    <input class="form-control" id="android-sha1" ng-model="identityProvider.config.AndroidSha1" required>
+  </div>
+  <kc-tooltip>{{:: 'jdsmart-android-sha1.tooltip' | translate}}</kc-tooltip>
+</div>
