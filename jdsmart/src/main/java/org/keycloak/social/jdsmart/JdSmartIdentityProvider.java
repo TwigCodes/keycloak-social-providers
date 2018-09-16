@@ -78,14 +78,16 @@ public class JdSmartIdentityProvider
   @Override
   protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
     String uid = getJsonProperty(profile, "uid");
+    String usernick = getJsonProperty(profile, "user_nick");
     BrokeredIdentityContext user = new BrokeredIdentityContext(uid);
-    user.setUsername(getJsonProperty(profile, uid));
-    user.setBrokerUserId(getJsonProperty(profile, uid));
-    user.setModelUsername(getJsonProperty(profile, uid));
-    user.setName(getJsonProperty(profile, "user_nick"));
+    user.setUsername(usernick);
+    user.setBrokerUserId(uid);
+    user.setModelUsername(uid);
+    user.setName(usernick);
     user.setIdpConfig(getConfig());
     user.setIdp(this);
     AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
+    logger.debug("BrokeredIdentityContext returned from extractIdentityFromProfile is: " + user);
     return user;
   }
 
@@ -177,7 +179,8 @@ public class JdSmartIdentityProvider
 			logger.error(e);
     }
     String accessToken = extractTokenFromResponse(response, OAUTH2_PARAMETER_ACCESS_TOKEN);
-		context.getContextData().put(FEDERATED_ACCESS_TOKEN, accessToken);
+    context.getContextData().put(FEDERATED_ACCESS_TOKEN, accessToken);
+    logger.debug("BrokeredIdentityContext.getContextData returns: " + context.getContextData());
 		return context;
 	}
 

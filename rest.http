@@ -1,0 +1,56 @@
+
+###
+curl -X POST -k -vu test_client:test_secret http://localhost:8095/oauth/token -H "Accept: application/json" -d "password=password&username=admin&grant_type=password&scope=read&client_secret=test_secret&client_id=test_client"
+
+###
+curl "https://devops.datenkollektiv.de/renderBannerTxt?text=TwigCodes&font=slant"
+
+###
+GET http://localhost:8095/oauth/authorize?response_type=token&client_id=discoveryClient&redirect_uri=http://localhost/123
+
+###
+GET http://localhost:8095/oauth/check_token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NjI1MjQwLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiNjJlYmJhZmUtY2VkZi00YTkwLTk4MzEtMWNmOWMwZDliMTVkIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.cE-fc3mB1HY-DPqhyI6pX5VRbbIlqip0q49viawnDIM
+
+###
+GET http://localhost:8095/actuator/
+
+
+###
+GET http://localhost:8095/oauth/check_token?token=123
+
+###
+GET http://localhost:8095/oauth/token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NjI1MjQwLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiNjJlYmJhZmUtY2VkZi00YTkwLTk4MzEtMWNmOWMwZDliMTVkIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.cE-fc3mB1HY-DPqhyI6pX5VRbbIlqip0q49viawnDIM
+
+###
+GET http://localhost:8099/api/management/push?content=ter
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiXSwiZXhwIjoxNTM0NjI1MjQwLCJhdXRob3JpdGllcyI6WyLotoXnuqfnrqHnkIblkZgiXSwianRpIjoiNjJlYmJhZmUtY2VkZi00YTkwLTk4MzEtMWNmOWMwZDliMTVkIiwidGVuYW50IjoiYWRtaW4iLCJjbGllbnRfaWQiOiJ0ZXN0X2NsaWVudCJ9.cE-fc3mB1HY-DPqhyI6pX5VRbbIlqip0q49viawnDIM
+
+###
+http://localhost:8095/oauth/authorize?response_type=code&client_id=discoveryClient&redirect_uri=http://localhost:8099
+###
+curl -i -d "grant_type=authorization_code&code=LBeTKY&client_id=discoveryClient&client_secret=discoverySecret" -X POST http://localhost:8095/oauth/token
+
+###
+POST https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd5eaca40a1d44102&secret=8789092f7ce0facb4687e1c07d9d8e34&code=CODE&grant_type=authorization_code
+
+###
+curl -X POST -k -vu login-app:855ee82d-38d0-4d6a-b7e0-22726097cc96 http://localhost:9999/auth/realms/twigcodes/protocol/openid-connect/auth -H "Accept: application/json" -d "response_type=token&password=password&username=twiguser&grant_type=password&scope=profile&client_secret=855ee82d-38d0-4d6a-b7e0-22726097cc96&client_id=login-app"
+
+###
+POST http://localhost:9999/auth/realms/twigcodes/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+password=password&username=wpcfan&grant_type=password&scope=openid&client_secret=4ea06071-533c-40b0-89c2-5cc1c858cf42&client_id=login-app
+
+###
+GET http://localhost:9999/auth/realms/twigcodes/broker/jdsmart/token
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJkVGhkUnhtWlBjRGhFT01WRWlOSDE3NDkzdktxXzduYWU3eHJEZzd0TGFBIn0.eyJqdGkiOiJjOTdkZDQyOC0zOWJjLTQyOGEtOTZkZC1kYTUyZjI5NzJjNjkiLCJleHAiOjE1MzcwMTkzMTIsIm5iZiI6MCwiaWF0IjoxNTM3MDE5MDEyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojk5OTkvYXV0aC9yZWFsbXMvdHdpZ2NvZGVzIiwiYXVkIjoibG9naW4tYXBwIiwic3ViIjoiZmY4ZDIyMWYtY2Y2ZC00OWYzLWE4NDYtZjcwNzY1MGU5YjU0IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibG9naW4tYXBwIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNTlmNmVhNGItNWRmOC00OGUxLWJiOGQtOWRhMGE3NTMxZDQyIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsibG9naW4tYXBwIjp7InJvbGVzIjpbInVzZXIiXX0sImJyb2tlciI6eyJyb2xlcyI6WyJyZWFkLXRva2VuIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiUGVuZyBXYW5nIiwicHJlZmVycmVkX3VzZXJuYW1lIjoid3BjZmFuIiwiZ2l2ZW5fbmFtZSI6IlBlbmciLCJmYW1pbHlfbmFtZSI6IldhbmciLCJlbWFpbCI6IndwY2ZhbkBnbWFpbC5jb20ifQ.zcZXlPwSb4H67bvMW_UE1OcS-XxX7psQz4qKuPiZBmY9JKH2zGm-s8LGDbmhz85TNuBspw5rzd6tmTNgIYQVHyts5bh5sdx5zf9Ng15bgnIfsI6FnnWsz5JCTPqUsZVXSKy7QlYnbSF4qL3QQ0wBmAfuIE0rNhmTdY-AHfVZfOF9k9NoYSOemSp055DPZ_uny_e1pMkwIfjw0iMRmn5gwizXwQX5d-3ZJN2BuwyyE9IMP20RiO5ke16LNKvHVw08B5gHZfUpo-3qedjl68U36ac2_G-VJoO7aUwJq-QUFHzYtkrRXcL_afgTg3sLgvnvO5ybR918CCKFadKeheNqvw
+Accept: application/json
+
+###
+http://localhost:9999/auth/realms/schome/protocol/openid-connect/auth?response_type=code&client_id=login-app&kc_idp_hint=jdsmart&redirect_uri=http://localhost:8080
+
+###
+http://localhost:9999/auth/realms/schome/protocol/openid-connect/auth?response_type=code&client_id=login-app&redirect_uri=http://localhost:8080

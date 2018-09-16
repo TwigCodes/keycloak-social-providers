@@ -1,0 +1,46 @@
+version: '3.3'
+services:
+  keycloak:
+    image: twigcodes/keycloak
+    restart: on-failure
+    command:
+      - '-b'
+      - '0.0.0.0'
+      - '-Dkeycloak.migration.action=import'
+      - '-Dkeycloak.migration.provider=dir'
+      - '-Dkeycloak.migration.dir=/config/'
+      - '-Dkeycloak.migration.strategy=IGNORE_EXISTING'
+    volumes:
+      - ./keycloak/config:/config/
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=password
+      - KEYCLOAK_LOGLEVEL=DEBUG
+      - DB_VENDOR=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_ADDR=keycloak-db
+      - DB_PORT=5432
+      - DB_DATABASE=keycloakdb
+    ports:
+      - '9999:8080'
+    depends_on:
+      - keycloak-db
+    networks:
+      - docker-app
+
+  keycloak-db:
+    image: postgres:10
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloakdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - docker-app
+volumes:
+  pgdata: {}
+networks:
+  docker-app:
+    driver: bridge
