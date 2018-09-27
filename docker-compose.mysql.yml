@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  keycloak-db:
+    image: mysql:5.7
+    volumes:
+    - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloakdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    networks:
+    - docker-app
+  keycloak:
+    image: twigcodes/keycloak
+    restart: on-failure
+    command:
+    - '-b'
+    - '0.0.0.0'
+    - '-Dkeycloak.migration.action=import'
+    - '-Dkeycloak.migration.provider=dir'
+    - '-Dkeycloak.migration.dir=/config/'
+    - '-Dkeycloak.migration.strategy=IGNORE_EXISTING'
+    volumes:
+    - ./keycloak/config:/config/
+    environment:
+    - KEYCLOAK_USER=admin
+    - KEYCLOAK_PASSWORD=password
+    - KEYCLOAK_LOGLEVEL=DEBUG
+    - DB_VENDOR=MYSQL
+    - DB_USER=admin
+    - DB_PASSWORD=password
+    - DB_ADDR=keycloak-db
+    - DB_PORT=3306
+    - DB_DATABASE=keycloakdb
+    ports:
+    - '9999:8080'
+    depends_on:
+    - keycloak-db
+    networks:
+    - docker-app
+volumes:
+  mysql_data:
+    driver: local
+networks:
+  docker-app:
+    driver: bridge

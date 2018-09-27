@@ -39,10 +39,10 @@ POST https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd5eaca40a1d44102&
 curl -X POST -k -vu login-app:855ee82d-38d0-4d6a-b7e0-22726097cc96 http://localhost:9999/auth/realms/twigcodes/protocol/openid-connect/auth -H "Accept: application/json" -d "response_type=token&password=password&username=twiguser&grant_type=password&scope=profile&client_secret=855ee82d-38d0-4d6a-b7e0-22726097cc96&client_id=login-app"
 
 ###
-POST http://localhost:9999/auth/realms/twigcodes/protocol/openid-connect/token
+POST http://localhost:9999/auth/realms/master/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
-password=password&username=wpcfan&grant_type=password&scope=openid&client_secret=4ea06071-533c-40b0-89c2-5cc1c858cf42&client_id=login-app
+password=password&username=admin&grant_type=password&scope=openid&client_secret=4ea06071-533c-40b0-89c2-5cc1c858cf42&client_id=login-app
 
 ###
 GET http://localhost:9999/auth/realms/twigcodes/broker/jdsmart/token
@@ -50,33 +50,33 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJkVGhkUn
 Accept: application/json
 
 ### 直接登录到第三方
-GET http://localhost:9999/auth/realms/schome/protocol/openid-connect/auth
+GET https://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/auth
   ?response_type=code
   &client_id=login-app
   &kc_idp_hint=jdsmart
-  &redirect_uri=http://localhost:8080
+  &redirect_uri=http://localhost:9000
 
 ### 登录到 Keycloak
-GET http://localhost:9999/auth/realms/schome/protocol/openid-connect/auth
+GET https://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/auth
   ?response_type=code
   &client_id=login-app
-  &redirect_uri=http://localhost:8080
+  &redirect_uri=http://localhost:9000
 
 ### 使用服务帐户得到 Access Token
-POST http://localhost:9999/auth/realms/master/protocol/openid-connect/token
-Authorization: Basic service-app b2202a44-add5-4355-904f-eab3b6fb2ac4
+POST https://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/token
+Authorization: Basic service-app 4d0d2906-0a35-4e23-a58c-8cb229fa9272
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=client_credentials
 
 ### Password Grant
-POST http://localhost:9999/auth/realms/master/protocol/openid-connect/token
+POST https://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=password
 &client_id=login-app
-&password=password
-&username=admin
+&password=X*bcYp4x
+&username=twigadmin
 
 
 ### Impersonate
@@ -84,11 +84,11 @@ grant_type=password
 # login-app 需要开启权限，token_exchange 权限需要配置一个 Client Polciy
 # 这个 Policy 要配置 Client 为来源请求的 app ，即 service-app
 # 然后在 token_exchange 中配置刚建立的 Policy
-POST http://localhost:9999/auth/realms/master/protocol/openid-connect/token
+POST http://auth.twigcodes.com/auth/realms/twigcodes/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 client_id=service-app
-&client_secret=b2202a44-add5-4355-904f-eab3b6fb2ac4
+&client_secret=4d0d2906-0a35-4e23-a58c-8cb229fa9272
 &grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &subject_token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2YVhNbXJuTm9rSGdEWWt6Vng3eUJQd25YSmZob3RBUDNoNVM2Ulc0bUpZIn0.eyJqdGkiOiIwOTQ4MDk1MC1jNWMyLTQzZGEtODllNy1mN2QzMDc0MzJlYWYiLCJleHAiOjE1MzcwODA1NjQsIm5iZiI6MCwiaWF0IjoxNTM3MDgwNTA0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojk5OTkvYXV0aC9yZWFsbXMvbWFzdGVyIiwiYXVkIjoic2VydmljZS1hcHAiLCJzdWIiOiIzYWEzNWE2NC05OWU5LTQwZjgtODM3MS0xYmJkOGRjNjVhZmEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzZXJ2aWNlLWFwcCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjkxMWEzNGNkLWU2MWItNGVmOS05ZTIyLTFmMDEyZjY3YmQ3MyIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOltdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7Im1hc3Rlci1yZWFsbSI6eyJyb2xlcyI6WyJpbXBlcnNvbmF0aW9uIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudEhvc3QiOiIxNzIuMTguMC4xIiwiY2xpZW50SWQiOiJzZXJ2aWNlLWFwcCIsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1zZXJ2aWNlLWFwcCIsImNsaWVudEFkZHJlc3MiOiIxNzIuMTguMC4xIiwiZW1haWwiOiJzZXJ2aWNlLWFjY291bnQtc2VydmljZS1hcHBAcGxhY2Vob2xkZXIub3JnIn0.GjNrJ6r1KsX6rrJChcPDpgm11Ob8h0xzlsTxiRaK3N_M5XoegCPCEG4bv2_xCEy-oeMPtvnWoXR94pyO9WSCDNSVIGfzdckqDcMhkyczcaa3EWfIYYLz1v-4E0JbQ3Kv2ri45OE_LLIIaYg5gtvKWelUxZCz7f4lUFcXHMNOeP3Ctq9gMn7xFlcd7b2ADxcB6p-9ACeTLUxMKdd9MBTh9Xns14eJ-ziJUw7zW-RY0Prmb7PVLevpIiZ4j9EDiuPUIqg9tcuBY7h6qlsvvtroA5Nc1lwpRe_q5tVuhN60Szi_wN3DQIXXECHOckZjitidxZe3enFLZgzB3YgqYYWW4A
 &requested_token_type=urn:ietf:params:oauth:token-type:access_token
